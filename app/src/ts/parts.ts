@@ -74,7 +74,49 @@ function def(id: string, solids: Solid[]): PartDef {
 
 export const box = (id: string, a: number, b: number, h: number): PartDef => def(id, [rectAt(0, 0, b, a, 0, h)]);
 
+// ---- NF10330 T-90A (instructions/nf10330-t90a)
+const plate = (a: number, b: number): PartDef => box(`plate_${a}x${b}`, a, b, 1);
+const tile = (a: number, b: number): PartDef => box(`tile_${a}x${b}`, a, b, 1);
+
+/** Wedge tile 2 x 3. In rotation 0 the "left" one is 1 deep at x = 0 and 2 deep at x = 3, the "right" one the other way round. */
+const wedgeLeft: Vec2[] = [
+  [0, 1],
+  [0, 2],
+  [3, 2],
+  [3, 0],
+];
+const wedgeRight: Vec2[] = [
+  [0, 0],
+  [0, 2],
+  [3, 2],
+  [3, 1],
+];
+
 const list: PartDef[] = [
+  plate(4, 12),
+  plate(1, 2),
+  plate(1, 1),
+  plate(1, 3),
+  plate(1, 6),
+  plate(1, 8),
+  plate(1, 10),
+  plate(1, 12),
+  plate(6, 12),
+  box('plate_2x2_2studs', 2, 2, 1),
+  box('plate_1x2_jumper', 1, 2, 1),
+  box('plate_rim_6x12', 6, 12, 1),
+  box('brick_2x2x1', 2, 2, 3),
+  box('brick_1x2x2', 1, 2, 6),
+  box('brick_1x1x1', 1, 1, 3),
+  tile(2, 3),
+  tile(2, 6),
+  tile(1, 2),
+  tile(1, 3),
+  tile(1, 4),
+  tile(1, 6),
+  box('tile_1x2_grille', 1, 2, 1),
+  def('wedge_tile_2x3_left', [{ poly: wedgeLeft, z0: 0, z1: 1 }]),
+  def('wedge_tile_2x3_right', [{ poly: wedgeRight, z0: 0, z1: 1 }]),
   ...Object.entries(DERIVED).map(([id, p]) => ({ id, solids: p.solids, w: p.w, d: p.d })),
 ];
 

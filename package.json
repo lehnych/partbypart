@@ -8,8 +8,10 @@
     "dev": "vite --config _vite/vite.config.ts",
     "build": "tsc --noEmit && vite build --config _vite/vite.config.ts",
     "preview": "vite preview --config _vite/vite.config.ts",
-    "test": "node --test app/tests/engine.test.ts",
-    "ldraw": "node --experimental-strip-types parts/bricks/build-parts.mjs"
+    "test": "node --test app/tests/engine.test.ts instructions/*/model.test.ts",
+    "ldraw": "node --experimental-strip-types parts/bricks/build-parts.mjs",
+    "check:paths": "node --experimental-strip-types tools/check/entry-paths.mjs",
+    "model:t90a": "python3 instructions/nf10330-t90a/build/gen-beams.py && node --experimental-strip-types instructions/nf10330-t90a/build/rotate-beam.mjs"
   },
   "dependencies": {
     "three": "^0.170.0"

@@ -2,15 +2,17 @@
 
 PartByPart – portal for 3D building instructions (brick models now, furniture later). The repository holds the portal
 interface and the general 3D engine: a scroll-driven 3D build view in which every scroll segment adds one part, as in
-the booklet. It contains no instruction yet. Vite + TypeScript + Three.js r170, real LDraw meshes, UI in English and
-German.
+the booklet. The instructions live in `instructions/<id>/`, each with its own README.md. Vite + TypeScript + Three.js
+r170, real LDraw meshes, UI in English and German.
 
 ## Commands
 
 ```
 npm install
 npm run dev          # http://localhost:5173  (/?dev=1 lists overlaps and floating parts in the console)
-npm test             # engine tests (app/tests/engine.test.ts: validateModel, buildUnits) – must stay green
+npm test             # engine tests (app/tests/engine.test.ts) + every instructions/<id>/model.test.ts – must stay green
+npm run check:paths -- instructions/<id>   # entry ways of one instruction (also part of its model.test.ts)
+npm run model:<key>  # regenerate the model.json of an instruction from its build/ generators (see its README.md)
 npm run ldraw        # rebuild parts/bricks/ldraw-meshes.json + app/src/ts/derived-parts.ts – run after every change in parts/bricks/map.mjs or build-parts.mjs
 npm run build        # tsc + vite build -> dist/ (upload dist/ as is; ES modules in several files, needs a web server, not file://)
 npm run preview      # serve dist/ locally
@@ -21,13 +23,16 @@ Node >= 22.18 (`--experimental-strip-types`).
 ## Layout
 
 ```
-instructions/<id>/           one folder per instruction of the portal (catalog.ts lists them; folder empty for now)
+instructions/<id>/           one folder per instruction of the portal (catalog.ts lists them)
+  README.md                    documentation of this instruction (steps, generators, where corrections go, open points)
   model.json                   all elements of the instruction (generated if the folder has build/ generators)
   build/                       optional generators that write model.json
+  model.test.ts                checks of this instruction (validation, parts box per step, entry ways), run by npm test
+  checks.json                  optional exceptions of this instruction for tools/check (parts that pass through each other)
 parts/bricks/                shared by every brick model
   ldraw-base/p/                stud primitives of the engine (stud.dat, stud2.dat + 4 primitives) – fixed, not per model
-  library/                     LDraw .dat files of the instructions' parts (created with the first part)
-  map.mjs                      catalogue part -> LDraw file + placement options (MAP, empty for now)
+  library/                     LDraw .dat files of the instructions' parts (parts/ and p/)
+  map.mjs                      catalogue part -> LDraw file + placement options (MAP)
   build-parts.mjs              LDraw -> meshes converter (also writes app/src/ts/derived-parts.ts)
   ldraw-meshes.json            generated meshes (npm run ldraw)
 app/src/ts/
@@ -37,16 +42,16 @@ app/src/ts/
   parts.ts      catalogue (taken from derived-parts.ts; footprints for the collision grid), xform/orientedPart
   geometry.ts   meshes -> Three.js geometry; types.ts; main.ts (scroll, next/prev, keys F/V)
   ui.ts         app shell: header (PARTBYPART word mark, picker -> catalog dialog, help, settings), rail, step panel, time line, status bar
-  catalog.ts    the instructions of the portal (?anleitung=<id>; CATALOG empty for now, optional time-line `sections`);
+  catalog.ts    the instructions of the portal (?anleitung=<id>; optional time-line `sections`);
                 a new instruction = a new entry + texts `cat.<key>.title/desc`; without one the app shows only the portal
   theme.ts      light / dark / system; locales/{en,de}.ts (help texts carry simple HTML)
 app/src/scss/style.scss  tokens + layout (see docs/DESIGN.md); app/src/fonts/  Inter + JetBrains Mono (OFL), copied to dist/assets/fonts
 docs/DESIGN.md           design system (accent red) – the reference for every visual change
 app/tests/engine.test.ts     general checks of validateModel and buildUnits
 tools/                       checks and helper scripts that work on the data of an instruction (Node, npm scripts,
-                             never bundled into the page); empty for now, e.g. tools/check/ for a sweep check of the
-                             entry ways (does a part cut through placed parts on its way in?) that takes the path of an
-                             instruction's model.json as argument
+                             never bundled into the page); tools/check/entry-paths.mjs: sweep check of the entry ways (does a
+                             part cut through placed parts on its way in?), takes the instruction folder or its
+                             model.json as argument, exceptions from that instruction's checks.json
 ```
 
 ## Where a change belongs

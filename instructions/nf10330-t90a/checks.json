@@ -1,0 +1,11 @@
+{
+  "entryPaths": {
+    "passes": [
+      { "mover": "^axle_[34]_stop", "other": "^tech_", "note": "an axle goes through the hole of a Technic brick" },
+      { "mover": "^(bush_|disc_)", "other": "^axle_", "note": "a bush or disc slides onto an axle" },
+      { "mover": "^(bracket_1x1|slope_1x1)$", "other": "^(round_plate_1x1_open|bar_clip_15).*_h$", "note": "the thin upright part of a bracket 1x1 (step 63) passes beside the half-stud stack of step 62 in the same cells" }
+    ],
+    "topCheckStages": ["deck"],
+    "note": "topCheckStages: parts of the rear deck (steps 52-64) coming from below must start above the top of the model"
+  }
+}

@@ -16,5 +16,5 @@
     "skipLibCheck": true,
     "types": ["vite/client", "node"]
   },
-  "include": ["app/src", "app/tests"]
+  "include": ["app/src", "app/tests", "instructions/**/*.ts"]
 }

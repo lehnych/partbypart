@@ -1,12 +1,13 @@
 # PartByPart
 
 Portal for 3D building instructions, part by part as in the booklet: brick models now, furniture later. This repository
-holds the portal interface and the general 3D engine; it contains no instruction yet.
+holds the portal interface, the general 3D engine and the instructions; each instruction documents itself in
+`instructions/<id>/README.md`.
 
 ```
-instructions/<id>/  one folder per instruction (model.json, optional build/ generators); empty until the first one
+instructions/<id>/  one folder per instruction (model.json, README.md, optional build/ generators, model.test.ts)
 parts/bricks/       converter + the LDraw .dat files -> parts/bricks/ldraw-meshes.json (shared by every brick model)
-tools/              checks and helper scripts for the instructions (Node, not part of the page); empty for now
+tools/              checks and helper scripts for the instructions (Node, not part of the page)
 app/       development: src/ts (TypeScript), src/scss (SCSS), src/fonts, tests/
 dist/      deployment: upload this folder to the web server
 _vite/     vite.config.ts (dev server and build)
@@ -16,7 +17,7 @@ package.json, tsconfig.json
 ```
 npm install
 npm run dev     # develop at http://localhost:5173
-npm test        # engine tests: validateModel, buildUnits
+npm test        # engine tests + the tests of every instruction
 npm run ldraw   # only when parts change (studs from parts/bricks/ldraw-base, parts from parts/bricks/library)
 npm run build   # tsc + vite build -> dist/
 npm run preview # serve dist/ locally

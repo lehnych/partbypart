@@ -2,6 +2,8 @@
 // A new instruction = a new entry here (+ its texts `cat.<key>.*` in locales/*.ts) and its model data
 // (instructions/<id>/model.json, imported here and returned by `load`).
 
+import t90a from '../../../instructions/nf10330-t90a/model.json';
+
 /** Categories of the picker, in this order. Generic names on purpose (no trademarks as category names). */
 export const CATEGORIES = ['bricks', 'furniture'] as const;
 export type Category = (typeof CATEGORIES)[number];
@@ -28,7 +30,22 @@ export interface CatalogEntry {
   load(): Promise<unknown>;
 }
 
-export const CATALOG: CatalogEntry[] = [];
+export const CATALOG: CatalogEntry[] = [
+  {
+    id: 'nf10330',
+    category: 'bricks',
+    code: 'NF10330',
+    maker: 'NifeliZ',
+    series: 'Military',
+    key: 't90a',
+    sections: [
+      { key: 'cat.t90a.secHull', from: 1 },
+      { key: 'cat.t90a.secBeams', from: 18 },
+      { key: 'cat.t90a.secDeck', from: 52 },
+    ],
+    load: async () => t90a, // bundled into app.js
+  },
+];
 
 /** The instruction named in the address, or the first one; null while the portal has none. */
 export function entryFromUrl(): CatalogEntry | null {
