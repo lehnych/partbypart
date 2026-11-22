@@ -1,0 +1,1602 @@
+// Styles of the build simulator. Compiled to dist/assets/style.css by _vite/vite.config.ts.
+// Sizes are written as rem(Npx): the pixel values of docs/DESIGN.md stay readable, the output is rem (1rem = the
+// browser's base size, 16px by default), so the whole page scales with the visitor's font-size setting.
+// Hairlines (1–2px), borders, outlines and shadows stay in px.
+
+@use 'sass:math';
+
+@function rem($px) {
+  @return math.div($px, 16px) * 1rem;
+}
+// Look and tokens follow docs/DESIGN.md (design system, accent red). Change both together.
+
+$narrow: 40em; // rem(640px); same as NARROW in ui.ts (em in media queries = browser default size)
+
+// ------------------------------------------------------------------ fonts
+// Bundled from app/src/fonts (SIL Open Font License, see the LICENSE files there); latin + latin-ext only.
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('../fonts/jetbrains-mono-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('../fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// ----------------------------------------------------------------- tokens
+@mixin dark-colors {
+  --bg: #090c0a; /* also the 3D background (viewer.ts) */
+  --surface: #0f1311; /* bars, panel */
+  --surface-2: #141916; /* fields, buttons */
+  --surface-3: #1a201c;
+  --card: rgba(17, 18, 21, 0.96); /* popover, sheets, cards */
+  --border: #222a25;
+  --border-strong: #2e3832;
+  --text: #e3eae5;
+  --text-2: #aeb9b1;
+  --muted: #7d8a82;
+  --accent: #ff5a63;
+  --accent-weak: rgba(255, 90, 99, 0.12);
+  --accent-line: rgba(255, 90, 99, 0.45);
+  --on-accent: #2a0507;
+  --ok: #34c77b;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+@mixin light-colors {
+  --bg: #f9fefa;
+  --surface: #eff4f0;
+  --surface-2: #f9fefa;
+  --surface-3: #e8ece9;
+  --card: rgba(249, 254, 250, 0.98);
+  --border: #d6dad7;
+  --border-strong: #c4cac6;
+  --text: #141c17;
+  --text-2: #3a423d;
+  --muted: #6a716c;
+  --accent: #d91f2a;
+  --accent-weak: rgba(217, 31, 42, 0.1);
+  --accent-line: rgba(217, 31, 42, 0.45);
+  --on-accent: #fff;
+  --ok: #1d9a5a;
+  --shadow: 0 12px 32px rgba(20, 28, 23, 0.18);
+}
+
+:root {
+  @include dark-colors;
+  --sans: 'Inter Variable', Inter, -apple-system, 'system-ui', 'Segoe UI', Roboto, sans-serif;
+  --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  --r-xs: #{rem(4px)};
+  --r-sm: #{rem(6px)};
+  --r-md: #{rem(8px)};
+  --top-h: #{rem(44px)};
+  --rail-w: #{rem(48px)};
+  --panel-w: #{rem(300px)};
+  --bar-h: #{rem(26px)};
+  /* Notch and system bars (viewport-fit=cover): the bars at the edges keep clear of them. */
+  --inset-top: env(safe-area-inset-top, 0px);
+  --inset-right: env(safe-area-inset-right, 0px);
+  --inset-bottom: env(safe-area-inset-bottom, 0px);
+  --inset-left: env(safe-area-inset-left, 0px);
+  /* Free area for the 3D stage; ui.ts measures the bars and keeps these exact. */
+  --stage-top: var(--top-h);
+  --stage-left: var(--rail-w);
+  --stage-right: var(--panel-w);
+  --stage-bottom: var(--bar-h);
+  color-scheme: dark light;
+  font-family: var(--sans);
+  /* While Inter loads, the fallback font is scaled to Inter's x-height, so the text does not jump when it swaps. */
+  font-size-adjust: from-font;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* Without a choice in the settings the page follows the system. */
+@media (prefers-color-scheme: light) {
+  :root {
+    @include light-colors;
+  }
+}
+
+/* The settings write the visitor's choice into <meta name="color-scheme"> (theme.ts); it wins over the system. */
+:root:has(> head > meta[name='color-scheme'][content='light']) {
+  color-scheme: light;
+  @include light-colors;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='dark']) {
+  color-scheme: dark;
+  @include dark-colors;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+body {
+  font-size: rem(13px);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+kbd {
+  font-family: var(--mono);
+  font-size: rem(11px);
+  font-weight: 500;
+  line-height: rem(16px);
+  padding: 0 rem(5px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.grow {
+  flex: 1;
+}
+
+.cap {
+  margin: 0;
+  font-size: rem(11px);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em; /* 0.66px at 11px */
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+// ------------------------------------------------------------------ stage
+#stage,
+.axes-overlay {
+  position: fixed;
+  top: var(--stage-top);
+  left: var(--stage-left);
+  width: calc(100% - var(--stage-left) - var(--stage-right));
+  height: calc(100% - var(--stage-top) - var(--stage-bottom));
+  display: block;
+}
+
+#stage {
+  z-index: 0;
+  cursor: grab;
+  /* A one-finger swipe scrolls the page; the touch button switches this off. */
+  touch-action: pan-y;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &.touch-rotate {
+    touch-action: none;
+  }
+}
+
+.axes-overlay {
+  pointer-events: none;
+  z-index: 1;
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.wide-only {
+  @media (max-width: $narrow) {
+    display: none !important;
+  }
+}
+
+.narrow-only {
+  @media (min-width: #{$narrow + 0.0625em}) {
+    display: none !important;
+  }
+}
+
+// ---------------------------------------------------------------- buttons
+.ibtn {
+  width: rem(34px);
+  height: rem(34px);
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+
+  svg {
+    width: rem(20px);
+    height: rem(20px);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &.small {
+    width: rem(26px);
+    height: rem(26px);
+
+    svg {
+      width: rem(16px);
+      height: rem(16px);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  /* Pressed / open: accent tint (DESIGN.md button-primary). The state screen readers get is the same. */
+  &[aria-pressed='true'],
+  &[aria-expanded='true'],
+  &.open {
+    background: var(--accent-weak);
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent-line);
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: rem(6px);
+  height: rem(28px);
+  padding: 0 rem(9px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: rem(12px);
+  font-weight: 500;
+  cursor: pointer;
+
+  svg {
+    width: rem(15px);
+    height: rem(15px);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex: none;
+  }
+
+  &.primary {
+    height: rem(32px);
+    padding: 0 rem(10px);
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: rem(12.5px);
+    font-weight: 600;
+  }
+
+  &.link {
+    gap: rem(5px);
+    padding: 0 2px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--text-2);
+    font-size: rem(12px);
+    font-weight: 400;
+    white-space: nowrap;
+
+    svg {
+      width: rem(13px);
+      height: rem(13px);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      border-color: var(--border-strong);
+      color: var(--text);
+
+      &.primary {
+        border-color: var(--accent);
+        color: var(--on-accent);
+        filter: brightness(1.08);
+      }
+    }
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: default;
+  }
+}
+
+.seg {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+
+  button {
+    min-height: rem(24px); /* WCAG 2.5.8: targets at least 24 × 24 */
+    padding: 0 rem(9px);
+    white-space: nowrap;
+    border: 0;
+    border-radius: var(--r-xs);
+    background: transparent;
+    color: var(--text-2);
+    font-size: rem(12px);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 600;
+  }
+}
+
+select {
+  height: rem(28px);
+  padding: 0 rem(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: rem(12px);
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: rem(12px);
+  cursor: pointer;
+
+  .knob {
+    position: relative;
+    width: rem(32px);
+    height: rem(18px);
+    border-radius: rem(9px);
+    background: var(--surface-3);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
+    transition: background 0.15s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: rem(14px);
+      height: rem(14px);
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform 0.15s;
+    }
+  }
+
+  &[aria-checked='true'] .knob {
+    background: var(--accent);
+    box-shadow: none;
+
+    &::after {
+      transform: translateX(rem(14px));
+      background: var(--on-accent);
+    }
+  }
+}
+
+// ----------------------------------------------------------------- header
+.top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--top-h) + var(--inset-top));
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+  padding: var(--inset-top) calc(#{rem(8px)} + var(--inset-right)) 0 var(--inset-left);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Logo cell as wide as the rail, then the word mark of the portal (DESIGN.md code-lg). */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+  height: 100%;
+  flex: none;
+
+  .brand-icon {
+    width: var(--rail-w);
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--border);
+
+    svg {
+      width: rem(22px);
+      height: rem(22px);
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.6;
+
+      .stud {
+        fill: var(--accent);
+        stroke: none;
+      }
+    }
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(6px);
+    font-family: var(--mono);
+    font-size: rem(13px);
+    font-weight: 700;
+    letter-spacing: 0.14em; /* 1.82px at 13px */
+  }
+
+  .cursor {
+    width: rem(8px);
+    height: rem(15px);
+    background: var(--accent);
+  }
+}
+
+.divider {
+  width: 1px;
+  height: rem(20px);
+  background: var(--border);
+  flex: none;
+}
+
+/* Small mono label (DESIGN.md badge-filled): set numbers, counts, chips. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: rem(20px);
+  padding: 0 rem(7px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: rem(11px);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* The instruction shown; opens the picker (accent tint like deadboard's board picker). */
+.picker {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  min-width: 0;
+  height: rem(28px);
+  padding: 0 rem(6px) 0 rem(4px);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-sm);
+  background: var(--accent-weak);
+  font-size: rem(12.5px);
+  font-weight: 500;
+  cursor: pointer;
+
+  .tag {
+    height: rem(20px);
+  }
+
+  .picker-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .picker-chevron svg {
+    display: block;
+    width: rem(14px);
+    height: rem(14px);
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--accent);
+    }
+  }
+
+  &.open {
+    border-color: var(--accent);
+  }
+}
+
+// --------------------------------------------------------------- settings
+.settings {
+  position: fixed;
+  inset: auto;
+  top: calc(var(--top-h) + var(--inset-top) + #{rem(6px)});
+  right: calc(#{rem(8px)} + var(--inset-right));
+  z-index: 10; /* browsers without popover: a plain dialog, not in the top layer */
+  margin: 0;
+  width: rem(360px); /* room for "System (dark)" on one line */
+  max-width: calc(100vw - #{rem(16px)});
+  padding: rem(12px) rem(16px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+
+  /* Open as popover, or as plain dialog where popover is missing (:is() drops the unknown selector, not the rule). */
+  &:is(:popover-open, [open]) {
+    display: grid;
+    gap: rem(12px);
+  }
+
+  .settings-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: rem(-4px) rem(-8px) rem(-4px) 0;
+  }
+
+  .setting {
+    display: grid;
+    grid-template-columns: rem(104px) 1fr;
+    align-items: center;
+    gap: rem(8px);
+    color: var(--text-2);
+    font-size: rem(12.5px);
+
+    > :last-child {
+      justify-self: start;
+    }
+  }
+}
+
+// ------------------------------------------------------------------- rail
+.rail {
+  position: absolute;
+  top: calc(var(--top-h) + var(--inset-top));
+  left: 0;
+  bottom: calc(var(--bar-h) + var(--inset-bottom));
+  width: calc(var(--rail-w) + var(--inset-left));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: rem(8px) 0 rem(8px) var(--inset-left);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+
+  .grp {
+    display: flex;
+    flex-direction: column;
+    gap: rem(4px);
+  }
+
+  /* Separator between groups (only between those that are shown). */
+  .grp + .grp:not([hidden]) {
+    margin-top: rem(6px);
+    padding-top: rem(6px);
+    border-top: 1px solid var(--border);
+  }
+
+  .grp:empty,
+  .grp:not(:has(.ibtn:not(.touch-only))):has(.touch-only) {
+    display: none;
+  }
+}
+
+.touch-only {
+  display: none !important;
+}
+
+@media (pointer: coarse) {
+  .touch-only {
+    display: inline-grid !important;
+  }
+}
+
+// ------------------------------------------------------------------ panel
+.panel {
+  position: absolute;
+  top: calc(var(--top-h) + var(--inset-top));
+  right: 0;
+  bottom: calc(var(--bar-h) + var(--inset-bottom));
+  width: calc(var(--panel-w) + var(--inset-right));
+  display: flex;
+  flex-direction: column;
+  padding: rem(16px) calc(#{rem(16px)} + var(--inset-right)) rem(16px) rem(16px);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  overflow: auto;
+}
+
+.panel-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.steprow {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  margin-top: rem(12px);
+  font-size: rem(18px);
+  font-weight: 600;
+}
+
+.step-field {
+  width: rem(52px);
+  height: rem(32px);
+  padding: 0 rem(4px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: rem(17px);
+  font-weight: 600;
+  text-align: center;
+  cursor: text;
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &:hover {
+    border-color: var(--text-2);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+  }
+}
+
+.step-of {
+  font-family: var(--mono);
+  font-size: rem(13px);
+  font-weight: 400;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.segments {
+  display: flex;
+  gap: rem(4px);
+  margin: rem(12px) 0 rem(8px);
+
+  i {
+    flex: 1;
+    height: rem(4px);
+    border-radius: 2px;
+    background: var(--surface-3);
+  }
+
+  i.done {
+    background: var(--accent);
+  }
+}
+
+.counter {
+  color: var(--muted);
+  font-size: rem(12px);
+}
+
+.steprow .counter {
+  margin-left: auto;
+  font-weight: 400;
+}
+
+.partname {
+  margin-top: rem(4px);
+  font-size: rem(17px);
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.panel-nav {
+  margin-top: auto;
+  padding-top: rem(16px);
+
+  .primary {
+    width: 100%;
+  }
+}
+
+.nav-row {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  margin-top: rem(12px);
+  padding-top: rem(12px);
+  border-top: 1px solid var(--border);
+
+  .vdivider {
+    height: rem(18px);
+    background: var(--border);
+  }
+}
+
+// --------------------------------------------------------- stage overlay
+.stage-overlay {
+  position: absolute;
+  top: var(--stage-top);
+  left: var(--stage-left);
+  right: var(--stage-right);
+  bottom: var(--stage-bottom);
+  pointer-events: none !important;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.cards {
+  position: absolute;
+  top: rem(16px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - rem(32px));
+  display: grid;
+  justify-items: center;
+  gap: rem(8px);
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+  padding: rem(8px) rem(8px) rem(8px) rem(12px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: rem(12.5px);
+  line-height: 1.45;
+
+  &[hidden] {
+    display: none;
+  }
+
+  strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  .card-sub {
+    color: var(--text-2);
+    font-size: rem(12px);
+  }
+
+  .card-icon svg {
+    width: rem(22px);
+    height: rem(22px);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+  }
+
+  &.notice {
+    padding: rem(8px) rem(12px);
+    color: var(--text-2);
+  }
+
+  &.error {
+    max-width: rem(560px);
+    padding: rem(12px) rem(16px);
+    border-color: var(--accent);
+    white-space: pre-wrap;
+  }
+}
+
+// --------------------------------------------------------------- timeline
+.timeline {
+  position: absolute;
+  left: rem(16px);
+  right: rem(16px);
+  bottom: rem(12px);
+}
+
+.track {
+  position: relative;
+  height: rem(6px);
+  border-radius: rem(3px);
+  background: var(--surface-3);
+
+  /* The native slider lies invisibly over the bar; it is 12px larger above and below as hit area for touch. */
+  input {
+    position: absolute;
+    left: 0;
+    top: rem(-12px);
+    width: 100%;
+    height: calc(100% + rem(24px));
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+
+    &::-webkit-slider-runnable-track {
+      height: 100%;
+      background: transparent;
+      border: 0;
+    }
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 2px;
+      height: 100%;
+      background: transparent;
+      border: 0;
+    }
+    &::-moz-range-track {
+      background: transparent;
+      border: 0;
+    }
+    &::-moz-range-thumb {
+      width: 2px;
+      height: 100%;
+      background: transparent;
+      border: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  /* Keyboard focus on the slider: a ring around the whole bar, not just the bigger dot. */
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: rem(6px);
+  }
+
+  &:has(input:focus-visible) .thumb,
+  &:hover .thumb {
+    width: rem(18px);
+    height: rem(18px);
+    margin: rem(-9px) 0 0 rem(-9px);
+  }
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: rem(3px);
+  background: var(--accent);
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: rem(14px);
+  height: rem(14px);
+  margin: rem(-7px) 0 0 rem(-7px);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--accent-line);
+  pointer-events: none;
+  transition:
+    width 0.12s,
+    height 0.12s,
+    margin 0.12s;
+}
+
+.tick {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 1px;
+  background: var(--border-strong);
+  pointer-events: none;
+
+  &.major {
+    top: rem(-3px);
+    bottom: rem(-3px);
+    width: 2px;
+    margin-left: -1px;
+    background: var(--muted);
+  }
+}
+
+.sections {
+  position: relative;
+  height: rem(16px);
+  margin-top: rem(6px);
+  font-family: var(--mono);
+  font-size: rem(11px);
+  color: var(--muted);
+
+  span {
+    position: absolute;
+    top: 0;
+    padding-left: rem(6px);
+    white-space: nowrap;
+  }
+
+  span:first-child {
+    padding-left: 0;
+  }
+}
+
+// ------------------------------------------------------------- status bar
+.statusbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--bar-h) + var(--inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: rem(16px);
+  padding: 0 calc(#{rem(12px)} + var(--inset-right)) var(--inset-bottom) calc(#{rem(12px)} + var(--inset-left));
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: rem(11.5px);
+  white-space: nowrap;
+  overflow: hidden;
+
+  .dot {
+    display: inline-block;
+    width: rem(7px);
+    height: rem(7px);
+    margin-right: rem(6px);
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .hints {
+    display: flex;
+    gap: rem(12px);
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: rem(4px);
+    }
+  }
+}
+
+// ------------------------------------------------------- sheets (dialogs)
+.sheet {
+  position: fixed;
+  /* Every dialog opens centred over the page, between header and status bar (help, catalog). */
+  inset: calc(var(--top-h) + var(--inset-top) + #{rem(16px)}) 0 calc(var(--bar-h) + var(--inset-bottom) + #{rem(16px)});
+  margin: 0 auto;
+  width: rem(540px);
+  max-width: calc(100vw - var(--inset-left) - var(--inset-right) - #{rem(32px)});
+  max-height: none;
+  height: auto;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Scrolling builds the model, so a scroll over the open sheet or its backdrop must not reach the page behind it. */
+  &:modal {
+    overscroll-behavior: contain;
+  }
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.25);
+    overflow: hidden; /* makes the backdrop a scroll container, so overscroll-behavior applies to it */
+    overscroll-behavior: contain;
+  }
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: rem(8px) rem(8px) rem(8px) rem(16px);
+  border-bottom: 1px solid var(--border);
+
+  h2 {
+    margin: 0;
+    font-size: rem(15px);
+    font-weight: 600;
+  }
+
+  h2 + .tag {
+    margin: 0 auto 0 rem(8px);
+  }
+}
+
+.sheet-body {
+  overflow: auto;
+  overscroll-behavior: contain;
+
+  section {
+    padding: rem(16px);
+
+    + section {
+      border-top: 1px solid var(--border);
+    }
+  }
+
+  .cap {
+    margin-bottom: rem(8px);
+  }
+}
+
+.rich {
+  color: var(--text-2);
+  font-size: rem(12.5px);
+  line-height: 1.55;
+
+  p {
+    margin: 0 0 rem(8px);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: rem(18px);
+  }
+
+  li + li {
+    margin-top: rem(6px);
+  }
+
+  b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: rem(12px);
+    color: var(--text);
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: rem(128px) 1fr;
+    gap: rem(6px) rem(12px);
+    margin: 0;
+  }
+
+  dt {
+    color: var(--muted);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--text);
+  }
+}
+
+
+
+// ---------------------------------------------------------------- catalog
+/* The picker dialog (DESIGN.md card): centred like every sheet, wider for two cards per row. */
+.sheet.catalog {
+  width: rem(860px);
+}
+
+.catalog-tools {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  padding: rem(12px) rem(16px);
+  border-bottom: 1px solid var(--border);
+
+  .seg button {
+    height: rem(24px);
+    font-size: rem(12.5px);
+    white-space: nowrap;
+  }
+}
+
+.filter {
+  flex: 1;
+  min-width: 0;
+  height: rem(30px);
+  padding: 0 rem(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: rem(12.5px);
+
+  &::placeholder {
+    color: var(--muted);
+  }
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+  }
+}
+
+.sheet-body .cat-section {
+  padding: rem(16px) rem(16px) rem(4px);
+
+  + .cat-section {
+    border-top: 0;
+  }
+}
+
+.cat-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: rem(12px);
+  margin-bottom: rem(12px);
+
+  h3 {
+    margin: 0;
+    font-size: rem(14px);
+    font-weight: 600;
+  }
+
+  p {
+    margin: rem(2px) 0 0;
+    color: var(--muted);
+    font-size: rem(12px);
+  }
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, #{rem(340px)}), 1fr));
+  gap: rem(12px);
+  margin-bottom: rem(12px);
+}
+
+.cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: rem(8px);
+  padding: rem(12px) rem(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+  }
+
+  &.open {
+    border-color: var(--accent);
+    background: linear-gradient(var(--accent-weak), var(--accent-weak)), var(--surface);
+  }
+
+  .state {
+    padding: 0 rem(6px);
+    border: 1px solid var(--accent-line);
+    border-radius: var(--r-xs);
+    background: var(--accent-weak);
+    color: var(--accent);
+    font-size: rem(11px);
+    line-height: rem(18px);
+  }
+}
+
+.cat-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cat-card-title {
+  font-size: rem(14px);
+  font-weight: 600;
+}
+
+.cat-card-desc {
+  color: var(--text-2);
+  font-size: rem(12.5px);
+  line-height: 1.55;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(6px);
+}
+
+.cat-progress {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  margin-top: rem(4px);
+  color: var(--muted);
+  font-size: rem(12px);
+
+  .pb {
+    position: relative;
+    flex: 1;
+    height: rem(4px);
+    border-radius: 2px;
+    background: var(--surface-3);
+
+    i {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+  }
+}
+
+.cat-empty {
+  display: flex;
+  align-items: center;
+  gap: rem(16px);
+  margin-bottom: rem(12px);
+  padding: rem(20px);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-size: rem(12.5px);
+  line-height: 1.5;
+
+  svg {
+    width: rem(32px);
+    height: rem(32px);
+    flex: none;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.5;
+
+    .stud {
+      fill: var(--muted);
+      stroke: none;
+    }
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+  }
+}
+
+.cat-none {
+  margin: 0;
+  padding: rem(24px) rem(16px);
+  color: var(--muted);
+  text-align: center;
+}
+
+// ----------------------------------------------------------- narrow screens
+@media (max-width: $narrow) {
+  .brand .wordmark,
+  .divider {
+    display: none;
+  }
+
+  .top {
+    gap: rem(8px);
+  }
+
+  .top .grow {
+    flex: 0;
+  }
+
+  .picker {
+    flex: 1;
+
+    .tag,
+    .picker-chevron {
+      flex: none;
+    }
+  }
+
+  .catalog-tools {
+    flex-wrap: wrap;
+
+    .seg {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .filter {
+      flex-basis: 100%;
+    }
+  }
+
+  .rail {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: var(--panel-h, rem(120px));
+    width: auto;
+    height: rem(52px);
+    flex-direction: row;
+    justify-content: space-between;
+    padding: rem(4px) calc(#{rem(8px)} + var(--inset-right)) rem(4px) calc(#{rem(8px)} + var(--inset-left));
+    border-right: 0;
+    border-top: 1px solid var(--border);
+
+    .grp {
+      flex-direction: row;
+      gap: 2px;
+    }
+
+    .grp + .grp:not([hidden]) {
+      margin: 0 0 0 rem(4px);
+      padding: 0 0 0 rem(4px);
+      border-top: 0;
+      border-left: 1px solid var(--border);
+    }
+
+    .ibtn {
+      width: rem(44px);
+      height: rem(44px);
+    }
+  }
+
+  .panel {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    padding: rem(12px) calc(#{rem(16px)} + var(--inset-right)) max(#{rem(16px)}, var(--inset-bottom))
+      calc(#{rem(16px)} + var(--inset-left));
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    overflow: visible;
+  }
+
+  .panel .cap,
+  .panel-nav,
+  .statusbar {
+    display: none;
+  }
+
+  .steprow {
+    margin-top: 0;
+    font-size: rem(14px);
+  }
+
+  .step-field {
+    height: rem(44px);
+    width: rem(56px);
+  }
+
+  .partname {
+    margin-top: rem(8px);
+    font-size: rem(15px);
+  }
+
+  .panel .timeline {
+    position: static;
+    margin-top: rem(12px);
+
+    .sections {
+      display: none;
+    }
+  }
+
+  .sheet,
+  .sheet.catalog {
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: var(--inset-top) var(--inset-right) var(--inset-bottom) var(--inset-left);
+    border-radius: 0;
+    border: 0;
+  }
+
+  .settings .setting {
+    grid-template-columns: rem(96px) 1fr;
+  }
+}
+
+/* Fingers need larger targets than a mouse pointer (44 × 44), also in the wide layout on tablets. */
+@media (pointer: coarse) {
+  .ibtn,
+  .ibtn.small {
+    width: rem(44px);
+    height: rem(44px);
+  }
+
+  .btn,
+  .btn.primary,
+  select,
+  .step-field {
+    height: rem(44px);
+  }
+
+  .seg button,
+  .switch {
+    min-height: rem(44px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb,
+  .switch .knob,
+  .switch .knob::after {
+    transition: none;
+  }
+}
+
+/* High-contrast mode (Windows): backgrounds are replaced, so states shown by a background get system colours. */
+@media (forced-colors: active) {
+  .fill,
+  .segments i.done,
+  .cursor {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+
+  .tick {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+
+  .track {
+    border: 1px solid CanvasText;
+  }
+
+  .ibtn[aria-pressed='true'],
+  .seg button[aria-pressed='true'],
+  .switch[aria-checked='true'] .knob {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .ibtn[aria-disabled='true'],
+  .btn[aria-disabled='true'] {
+    opacity: 1;
+    color: GrayText;
+  }
+}
+
+// Portal without a chosen instruction (catalog.ts is empty): header, catalog, help, settings and the status bar.
+// The 3D stage, the build tools and the time line are hidden; the status bar shows the catalog instead of the build.
+.portal-only {
+  #stage,
+  #spacer,
+  .rail,
+  .panel,
+  .timeline,
+  .first-visit,
+  .statusbar .renderer,
+  .statusbar .mono,
+  .statusbar .hints,
+  .statusbar .portal-status ~ span:not(.grow) {
+    display: none !important;
+  }
+}
+
+.statusbar .portal-status {
+  display: none;
+
+  .portal-only & {
+    display: inline;
+  }
+}

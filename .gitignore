@@ -1,0 +1,13 @@
+# Abhängigkeiten und Build (npm install / npm run build erzeugen sie neu)
+node_modules/
+dist/
+
+# Quellmaterial (Bauanleitungen, Teile-ZIPs, Teileliste) bleibt außerhalb von Git
+_source/
+
+# System- und Editor-Dateien
+.DS_Store
+.idea/
+
+# Übergabe-Dokument vom Rechnerwechsel (nur lokal)
+UEBERGABE.md
